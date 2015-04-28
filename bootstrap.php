@@ -21,6 +21,10 @@ if (!defined('APP_VIEWS')) {
 if (!defined('APP_VIEWS_PARTIALS')) {
     define('APP_MODELS', 'app/views/partials/');
 }
+
+if (!defined('LIB')) {
+    define('LIB', 'lib/');
+}
 /** ---------------------------------------------------------------- **/
 // Lets Setup Doctrine.
 /** ---------------------------------------------------------------- **/
@@ -70,7 +74,8 @@ $autoLoader = new AutoLoader();
 // Set up custom name spaces.
 $autoLoader->registerNameSpaces(array(
     'AC' => APP_CONTROLLERS,
-    'AM' => APP_MODELS
+    'AM' => APP_MODELS,
+    'SCC' => LIB . 'custom_slim_controller/'
 ));
 
 // Now register the autoloader.
