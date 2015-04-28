@@ -1,5 +1,5 @@
 .DS_Store
-database_config.ini
+db_config.ini
 .editorconfig
 composer.lock
 vendor/
