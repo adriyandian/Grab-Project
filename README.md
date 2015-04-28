@@ -26,11 +26,11 @@ Git
 
 ## Install:
 
-- git clone git@github.com:AdamKyle/image_upload_app.git to /var/www (or
+- git clone `git@github.com:AdamKyle/image_upload_app.git` to `/var/www` (or
   where ever your web server reads from)
-- cd image_upload_app/
-- composer install
-- change db_config_sampl.ini to db_config.ini and fill in the data as you see fit.
+- cd `image_upload_app/``
+- `composer install`
+- change `db_config_sampl.ini` to `db_config.ini` and fill in the data as you see fit.
 - visit the site in your browser and have fun.
 
 ## Testing
