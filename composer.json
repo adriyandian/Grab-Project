@@ -1,0 +1,13 @@
+{
+  "require": {
+    "doctrine/orm": "2.4.*",
+    "slim/slim": "~2.6",
+    "freya/freya-exception": "0.0.5",
+    "freya/freya-loader": "0.1.0",
+    "freya/freya-templates": "0.0.10",
+    "freya/freya-factory": "0.0.5"
+  },
+  "autoload": {
+    "psr-4": {"": ""}
+  }
+}

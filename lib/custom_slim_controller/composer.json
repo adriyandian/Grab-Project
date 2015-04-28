@@ -1,0 +1,34 @@
+{
+  "name": "Custom Slim Controller",
+  "description": "Adds a strict GET, POST, PUT, DELETE routing system to slim and a base controller to be implemented",
+  "license": "MIT",
+  "keywords": [
+    "slim",
+    "framework",
+    "extension",
+    "custom",
+    "router",
+    "controller"
+  ],
+  "autoload": {
+    "psr-4": {
+      "SCController\\": "",
+      "Slim\\": "vendor/slim/slim/",
+      "Freya\\": "vendor/freya-loader/Freya/",
+      "SCC\\Tests\\": "tests/assets/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Adam Balan",
+      "email": "a-kyle@hotmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">= 5.3",
+    "slim/slim": "~2.6",
+    "freya/freya-loader": "0.1.0",
+    "freya/freya-templates": "0.0.10"
+  }
+}
