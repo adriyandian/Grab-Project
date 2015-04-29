@@ -6,20 +6,16 @@ if (!defined('DB_SCRIPTS')) {
     define('DB_SCRIPTS', 'app/db');
 }
 
-if (!defined('APP_CONTROLLERS')) {
-    define('APP_CONTROLLERS', 'app/controllers/');
-}
-
-if (!defined('APP_MODELS')) {
-    define('APP_MODELS', 'app/models/');
+if (!defined('APP')) {
+    define('APP', 'app/');
 }
 
 if (!defined('APP_VIEWS')) {
-    define('APP_MODELS', 'app/views/');
+    define('APP_VIEWS', 'app/views/');
 }
 
 if (!defined('APP_VIEWS_PARTIALS')) {
-    define('APP_MODELS', 'app/views/partials/');
+    define('APP_VIEWS_PARTIALS', 'app/views/partials/');
 }
 
 if (!defined('LIB')) {
@@ -73,9 +69,8 @@ $autoLoader = new AutoLoader();
 
 // Set up custom name spaces.
 $autoLoader->registerNameSpaces(array(
-    'AC' => APP_CONTROLLERS,
-    'AM' => APP_MODELS,
-    'SCC' => LIB . 'custom_slim_controller/'
+    'ImageUploader' => dirname(__FILE__) . '/' . APP,
+    'Lib'=> dirname(__FILE__) . '/' . LIB
 ));
 
 // Now register the autoloader.
@@ -100,20 +95,22 @@ use Freya\Factory\Pattern;
 
 // Set up our dependency array.
 $dependencies = array(
-    '\Freya\Template\Builder' => array(
+    '\Freya\Templates\Builder' => array(
         'params' => array(
-            'views' => array(
-                'core_views' => APP_VIEWS
-            ),
-            'partials' => array(
-                'core_partials' => APP_VIEWS_PARTIALS
+            array(
+                'views' => array(
+                    'core_views' => APP_VIEWS
+                ),
+                'partials' => array(
+                    'core_partials' => APP_VIEWS_PARTIALS
+                )
             )
         )
     )
 );
 
 // Register the dependencies.
-Parrent::registerDependencies($dependencies);
+Pattern::registerDependencies($dependencies);
 
 /** ---------------------------------------------------------------- **/
 // Now we need to set up the custom exception handler.
