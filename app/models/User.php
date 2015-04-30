@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="users")
@@ -16,39 +19,34 @@ class User {
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length="100")
-     * @Assert\NotEmpty
+     * @ORM\Column(type="string", length=32, nullable=false)
      */
     protected $firstName;
 
     /**
-     * @ORM\Column(type="string", length="100")
-     * @Assert\NotEmpty
+     * @ORM\Column(type="string", length=32, nullable=false)
      */
     protected $lastName;
 
     /**
-     * @ORM\Column(type="string", length="100", unique=true)
-     * @Assert\NotEmpty
+     * @ORM\Column(type="string", length=100, unique=true, nullable=false)
      */
     protected $userName;
 
     /**
-     * @ORM\Column(type="string", length="100", unique=true)
-     * @Assert\NotEmpty
+     * @ORM\Column(type="string", length=100, unique=true, nullable=false)
      * @Assert\Email
      */
     protected $email;
 
     /**
-     * @ORM\Column(type="string", length="500")
-     * @Assert\NotEmpty
+     * @ORM\Column(type="string", length=500, nullable=false)
      */
     protected $password;
 
 
     /**
-     * Get the value of First Name
+     * @ORM\Get the value of First Name
      *
      * @return mixed
      */
@@ -150,7 +148,7 @@ class User {
      *
      * @return self
      */
-    public fucntion setPassword($password) {
+    public function setPassword($password) {
         $this->password = password_hash($password, PASSWORD_DEFAULT);
         return $this;
     }
@@ -162,7 +160,7 @@ class User {
      *
      * @return bool
      */
-    public fucntion checkPassword($password) {
+    public function checkPassword($password) {
         if (password_hash($password, PASSWORD_DEFAULT) === $this->getPassword()) {
             return true;
         }
