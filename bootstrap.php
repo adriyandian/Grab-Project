@@ -6,6 +6,10 @@ if (!defined('APP')) {
     define('APP', dirname(__FILE__) . '/app/');
 }
 
+if (!defined('APP_MODELS')) {
+    define('APP_MODELS', dirname(__FILE__) . '/app/models/');
+}
+
 if (!defined('APP_VIEWS')) {
     define('APP_VIEWS', 'app/views/');
 }
@@ -22,7 +26,6 @@ if (!defined('LIB')) {
 /** ---------------------------------------------------------------- **/
 require_once 'vendor/autoload.php';
 
-
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 
@@ -34,7 +37,7 @@ class DoctrineSetup {
     /**
      * @var array $paths - where the entities live.
      */
-    protected $paths = array(APP . 'models/');
+    protected $paths = array(APP_MODELS);
 
     /**
      * @var bool $isDevMode - Are we considered "in development."
@@ -80,9 +83,17 @@ class DoctrineSetup {
  *
  * @return EntityManager
  */
-public function getEnetityManager() {
+function getEntityManager() {
     $ds = new DoctrineSetup();
     return $ds->getEntityManager();
+}
+
+/**
+ * Function that returns the conection to the database.
+ */
+function getConnection() {
+    $ds = new DoctrineSetup();
+    return $ds->getEntityManager()->getConnection();
 }
 
 /** ---------------------------------------------------------------- **/
@@ -102,12 +113,14 @@ $autoLoader = new AutoLoader();
 
 // Set up custom name spaces.
 $autoLoader->registerNameSpaces(array(
-    'ImageUploader' => dirname(__FILE__) . '/' . APP,
-    'Lib'=> dirname(__FILE__) . '/' . LIB
+    'ImageUploader' => APP,
+    'Lib'=> dirname(__FILE__) . '/' . LIB,
+    'SymfonyValidators' => dirname(__FILE__) . '/vendor/symfony/validator/'
 ));
 
 // Now register the autoloader.
 $autoLoader->register_auto_loader();
+
 
 /** ---------------------------------------------------------------- **/
 // Now we need to set up the template manager

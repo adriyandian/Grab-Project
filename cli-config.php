@@ -1,4 +1,10 @@
 <?php
+// Use  our bootstrap file.
+require_once 'bootstrap.php';
+
+$loader = require 'vendor/autoload.php';
+\Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
+
 /** ---------------------------------------------------------------- **/
 // We want to use the console tool so we need to register the
 // applications EntityManger to the console.
@@ -6,11 +12,30 @@
 // command line: php vendor/bin/doctrine
 /** ---------------------------------------------------------------- **/
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
-
-// Use  our bootstrap file.
-require_once 'bootstrap.php';
+use Symfony\Component\Console\Application;
 
 // Use our entity manager.
-$entityManager = GetEntitiyManager();
+$entityManager = getEntityManager();
 
-return ConsoleRunner::createHelpersSet($entityManbaer);
+$helperSet = ConsoleRunner::createHelperSet($entityManager);
+
+$cli = new Application('Doctrine Command Line Interface', \Doctrine\ORM\version::VERSION);
+$cli->setHelperSet($helperSet);
+
+ConsoleRunner::addCommands($cli);
+
+/** ---------------------------------------------------------------- **/
+// Add all your commands bellow this block.
+/** ---------------------------------------------------------------- **/
+$cli->addCommands(array(
+    // Migrations Commands
+    new \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand(),
+    new \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand(),
+    new \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand(),
+    new \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand(),
+    new \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand(),
+    new \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand()
+));
+
+// Don't touch.
+$cli->run();
