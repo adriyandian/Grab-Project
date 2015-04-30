@@ -2,8 +2,8 @@
 /** ---------------------------------------------------------------- **/
 // We need some constants.
 /** ---------------------------------------------------------------- **/
-if (!defined('DB_SCRIPTS')) {
-    define('DB_SCRIPTS', 'app/db');
+if (!defined('APP_MODELS')) {
+    define('APP_MODELS', dirname(__FILE__) . '/app/models/');
 }
 
 if (!defined('APP')) {
@@ -26,31 +26,69 @@ if (!defined('LIB')) {
 /** ---------------------------------------------------------------- **/
 require_once 'vendor/autoload.php';
 
-
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
+var_dump(DB_SCRIPTS);
+/**
+ * Set up Doctrine.
+ */
+class DoctrineSetup {
+    /**
+     * @var array paths
+     */
+    protected $paths = array(APP_MODELS);
 
-// Where do the db scripts sit? And, are we in development mode?
-$paths = array(DB_SCRIPTS);
-$isDevMode = false;
+    /**
+     * @var bool are we in development mode?
+     */
+    protected $isDevMode = true;
 
-//Now to set up connection.
-if (!file_exists('db_config.ini')) {
-    throw new \Exception(
-        'Missing db_config.ini. You can create this from the db_config_sample.ini'
-    );
+    /**
+     * @var array database paramters
+     */
+    protected $dbParams;
+
+    /**
+     * Set up the database connection information.
+     *
+     * We will explode if we cannot find the db_config.ini
+     */
+    public function __construct() {
+        if (!file_exists('db_config.ini')) {
+            throw new \Exception(
+                'Missing db_config.ini. You can create this from the db_config_sample.ini'
+            );
+        }
+
+        // Database info.
+        $this->dbParams = array(
+            'driver' => 'pdo_mysql',
+            'user' => parse_ini_file('db_config.ini')['DB_USER'],
+            'password' => parse_ini_file('db_config.ini')['DB_PASSWORD'],
+            'dbname' => parse_ini_file('db_config.ini')['DB_NAME']
+        );
+    }
+
+    /**
+     * Return the entity manager for managing the database.
+     *
+     * @return Doctrine\ORM\EntityManager instance
+     */
+    public function getEntityManager() {
+        // finally set up and connect.
+        $config = Setup::createAnnotationMetadataConfiguration($this->paths, $this->isDevMode, null, null, false);
+        $entityManager = EntityManager::create($this->dbParams, $config);
+
+        return $entityManager;
+    }
 }
 
-$dbParams = array(
-    'driver' => 'pdo_mysql',
-    'user' => parse_ini_file('db_config.ini')['DB_USER'],
-    'password' => parse_ini_file('db_config.ini')['DB_PASSWORD'],
-    'dbname' => parse_ini_file('db_config.ini')['DB_NAME']
-);
-
-// finally set up and connect.
-$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
-$entityManager = EntityManager::create($dbParams, $config);
+// Function to easily get the Entity manager
+// when ever we need it.
+function getEntityManager() {
+    $ds = new DoctrineSetup();
+    return $ds->getEntityManager();
+}
 
 /** ---------------------------------------------------------------- **/
 // Now we need to set up the autoloader.
