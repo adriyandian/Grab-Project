@@ -16,13 +16,20 @@ use Symfony\Component\Console\Application;
 
 // Use our entity manager.
 $entityManager = getEntityManager();
+$connection = getConnection();
 
-$helperSet = ConsoleRunner::createHelperSet($entityManager);
+ConsoleRunner::createHelperSet($entityManager);
+
+$helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
+    'db' => new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($connection),
+    'dialog' => new \Symfony\Component\Console\Helper\DialogHelper(),
+));
 
 $cli = new Application('Doctrine Command Line Interface', \Doctrine\ORM\version::VERSION);
 $cli->setHelperSet($helperSet);
 
 ConsoleRunner::addCommands($cli);
+
 
 /** ---------------------------------------------------------------- **/
 // Add all your commands bellow this block.
