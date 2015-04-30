@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace ImageUploader\Models;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -44,6 +44,63 @@ class User {
      */
     protected $password;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $created_at;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $updated_at;
+
+    /**
+     * Get the value of Created At
+     *
+     * @return mixed
+     */
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * Set the value of Created At
+     *
+     * @param mixed created_at
+     *
+     * @return self
+     */
+    public function setCreatedAt(\DateTime $created_at = null)
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Updated At
+     *
+     * @return mixed
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updated_at;
+    }
+
+    /**
+     * Set the value of Updated At
+     *
+     * @param mixed updated_at
+     *
+     * @return self
+     */
+    public function setUpdatedAt(\DateTime $updated_at = null)
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
 
     /**
      * @ORM\Get the value of First Name
@@ -175,5 +232,23 @@ class User {
      */
     private function getPassword(){
         return $this->password;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtTimeStamp() {
+        if (is_null($this->getCreatedAt())) {
+            $this->setCreatedAt(new \DatTime());
+        }
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAtTimeStamp() {
+        if (is_null($this->getUpdatedAt())) {
+            $this->setUpdatedAt(new \DatTime());
+        }
     }
 }
