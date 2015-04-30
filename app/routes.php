@@ -1,4 +1,5 @@
 <?php
+use \ImageUploader\Controllers as Controller;
 /** ---------------------------------------------------------------- **/
 // Routes.
 //
@@ -7,6 +8,18 @@
 /** ---------------------------------------------------------------- **/
 $app = new \Slim\Slim();
 
+$app->get('/', function(){
+    Controller\HomeController::showHome();
+});
+
+$app->get('/signup', function(){
+    Controller\SignupController::showSignupForm();
+});
+
+$app->post('/signup/new', function() use ($app){
+   var_dump($app->request()->post('username'));
+   var_dump($app->request()->post('password'));
+});
 
 // Don't touch.
 $app->run();

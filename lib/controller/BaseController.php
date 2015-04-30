@@ -1,6 +1,6 @@
 <?php
 
-namespace Lib;
+namespace Lib\Controller;
 
 /**
  * Used to set up the core actions of a controller.
@@ -21,7 +21,7 @@ interface BaseController {
      *
      * @param mixed $params
      */
-    public function indexAction($params = null);
+    public static function indexAction($params = null);
 
     /**
      * Show Action
@@ -30,7 +30,7 @@ interface BaseController {
      *
      * @param mixed params
      */
-    public function showAction($params);
+    public static function showAction($params);
 
     /**
      * Create Action
@@ -39,7 +39,7 @@ interface BaseController {
      *
      * @param mixed params
      */
-    public function createAction($params);
+    public static function createAction($params);
 
     /**
      * Update Action
@@ -48,7 +48,7 @@ interface BaseController {
      *
      * @param mixed params
      */
-    public function updateAction($params);
+    public static function updateAction($params);
 
     /**
      * Update Action
@@ -57,5 +57,5 @@ interface BaseController {
      *
      * @param mixed params
      */
-    public function deleteAction($params);
+    public static function deleteAction($params);
 }

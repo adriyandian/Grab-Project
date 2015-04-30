@@ -114,8 +114,7 @@ $autoLoader = new AutoLoader();
 // Set up custom name spaces.
 $autoLoader->registerNameSpaces(array(
     'ImageUploader' => APP,
-    'Lib'=> dirname(__FILE__) . '/' . LIB,
-    'SymfonyValidators' => dirname(__FILE__) . '/vendor/symfony/validator/'
+    'Lib'=> dirname(__FILE__) . '/' . LIB
 ));
 
 // Now register the autoloader.
