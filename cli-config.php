@@ -25,11 +25,10 @@ $helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
     'dialog' => new \Symfony\Component\Console\Helper\DialogHelper(),
 ));
 
-$cli = new Application('Doctrine Command Line Interface', \Doctrine\ORM\version::VERSION);
+$cli = new Application('Doctrine Command Line Interface', \Doctrine\ORM\Version::VERSION);
 $cli->setHelperSet($helperSet);
 
 ConsoleRunner::addCommands($cli);
-
 
 /** ---------------------------------------------------------------- **/
 // Add all your commands bellow this block.
