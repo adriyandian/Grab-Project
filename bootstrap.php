@@ -120,7 +120,6 @@ $autoLoader->registerNameSpaces(array(
 // Now register the autoloader.
 $autoLoader->register_auto_loader();
 
-
 /** ---------------------------------------------------------------- **/
 // Now we need to set up the template manager
 //

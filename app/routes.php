@@ -16,9 +16,12 @@ $app->get('/signup', function(){
     Controller\SignupController::showSignupForm();
 });
 
+$app->get('/signup/error', function(){
+    Controller\SignupController::showSignupForm();
+});
+
 $app->post('/signup/new', function() use ($app){
-   var_dump($app->request()->post('username'));
-   var_dump($app->request()->post('password'));
+  Controller\SignupController::createAction($app);
 });
 
 // Don't touch.

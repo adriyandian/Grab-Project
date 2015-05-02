@@ -30,7 +30,7 @@ class HomeController implements \Lib\Controller\BaseController  {
     }
 
     public static function showHome() {
-        Pattern::create('\Freya\Templates\Builder')->renderView('home\home');
+        Pattern::create('\Freya\Templates\Builder')->renderView('home/home');
     }
 
 }
