@@ -13,7 +13,7 @@ $app->get('/', function(){
 });
 
 $app->get('/signup', function(){
-    Controller\SignupController::showSignupForm();
+    Controller\UserController::showSignupForm();
 });
 
 $app->get('/signin', function() use ($app){
@@ -21,11 +21,11 @@ $app->get('/signin', function() use ($app){
 });
 
 $app->get('/signup/error', function(){
-    Controller\SignupController::showSignupForm();
+    Controller\UserController::showSignupForm();
 });
 
 $app->post('/signup/new', function() use ($app){
-  Controller\SignupController::createAction($app);
+  Controller\UserController::createAction($app);
 });
 
 // Don't touch.
