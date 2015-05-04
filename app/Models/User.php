@@ -4,6 +4,7 @@ namespace ImageUploader\Models;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use \Lib\Validators\UniqueValidator\Constraints as CustomAssert;
 
 /**
  * @ORM\Entity
@@ -37,6 +38,10 @@ class User {
      * @Assert\NotBlank(
      *    message = "Username cannot be blank"
      * )
+     * @CustomAssert\UserName(
+     *     entityManager = "getEntityManager",
+     *     entityClass = "\ImageUploader\Models\User"
+     * )
      */
     protected $user_name;
 
@@ -48,6 +53,10 @@ class User {
      * @Assert\Email(
      *    message = "The email you entered is invalid.",
      *    checkMX = true
+     * )
+     * @CustomAssert\Email(
+     *     entityManager = "getEntityManager",
+     *     entityClass = "\ImageUploader\Models\User"
      * )
      */
     protected $email;
@@ -223,14 +232,12 @@ class User {
      *
      * @param string password
      *
-     * @return self
+     * @return self or false
      */
     public function setPassword($password) {
-        if ($password !== null || $password !== " ") {
-          if (strlen($password) > 10) {
-            return false;
-          }
-
+        // We need 10 actual acharacters not 11, so we check for 10 indexes
+        // 0 - 9 == 1-10 for strlen.
+        if ($password !== null && strlen($password) > 9) {
           $this->password = password_hash($password, PASSWORD_DEFAULT);
           return $this;
         }

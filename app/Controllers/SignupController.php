@@ -32,6 +32,7 @@ class SignupController implements \Lib\Controller\BaseController  {
       $user = new User();
 
       if (!$user->setPassword($postParams['password'])) {
+        var_dump('here');
         $flash->createFlash('error', 'Password length myst be 10 characters');
         self::createEncryptedPostParams($postParams);
         $params->redirect('/signup/error');
@@ -62,8 +63,14 @@ class SignupController implements \Lib\Controller\BaseController  {
 
       self::destroyEncryptedPostParams();
 
-      getEntityManager()->persist($user);
-      getEntityManager()->flush();
+      try {
+        getEntityManager()->persist($user);
+        getEntityManager()->flush();
+      } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+        if ($e->getSqlState() == "2300") {
+          var_dump($e);
+        }
+      }
 
       $flash->createFlash('success', ' You have signed up successfully! Please sign in!');
       $params->redirect('/signin');
