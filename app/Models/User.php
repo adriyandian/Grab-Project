@@ -80,7 +80,7 @@ class User {
     protected $updated_at;
 
     public function getId() {
-      return $this->$id;
+      return $this->id;
     }
 
     /**
@@ -253,7 +253,7 @@ class User {
      * @return bool
      */
     public function checkPassword($password) {
-        if (password_hash($password, PASSWORD_DEFAULT) === $this->getPassword()) {
+        if (password_verify($password, $this->getPassword())) {
             return true;
         }
 

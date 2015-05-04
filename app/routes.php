@@ -16,12 +16,16 @@ $app->get('/signup', function(){
     Controller\UserController::showSignupForm();
 });
 
-$app->get('/signin', function() use ($app){
-    Controller\SessionController::showSignInForm($app);
+$app->get('/signin', function(){
+    Controller\SessionController::showSignInForm();
 });
 
-$app->get('/signup/error', function(){
-    Controller\UserController::showSignupForm();
+$app->get('/dashboard', function(){
+    Controller\DashboardController::indexAction();
+});
+
+$app->post('/session/create', function() use ($app){
+    Controller\SessionController::createAction($app);
 });
 
 $app->post('/signup/new', function() use ($app){

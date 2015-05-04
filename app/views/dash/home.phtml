@@ -1,0 +1,7 @@
+<?php
+if (!empty($flash->getAllFlashMessages(false))) {
+  $template->renderPartial('_flash_error', array('flash' => $flash));
+}
+?>
+
+Hello world!
