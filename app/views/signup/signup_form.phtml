@@ -1,5 +1,5 @@
 <?php
-if ($flash->getFlashMessage('error', false) !== null) {
+if (!empty($flash->getAllFlashMessages(false))) {
   $template->renderPartial('_flash_error', array('flash' => $flash));
 }
 ?>
@@ -11,11 +11,11 @@ if ($flash->getFlashMessage('error', false) !== null) {
     </label>
     <label>
         Last Name
-        <input type="text" name="lastname" id="last-name" value="<?php echo $formData['lastName']; ?>" />
+        <input type="text" name="lastname" id="last-name" value="<?php echo $formData['lastname']; ?>" />
     </label>
     <label>
         User Name
-        <input type="text" name="username" id="user-name" value="<?php echo $formData['lastName']; ?>" />
+        <input type="text" name="username" id="user-name" value="<?php echo $formData['username']; ?>" />
     </label>
     <label>
         Email

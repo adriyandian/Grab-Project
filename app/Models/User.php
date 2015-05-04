@@ -7,7 +7,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="users")
+ * @ORM\Table(name="users", uniqueConstraints={
+ *   @ORM\UniqueConstraint(name="user", columns={"user_name", "email"})}
+ * )
  */
 class User {
 
@@ -20,27 +22,41 @@ class User {
 
     /**
      * @ORM\Column(type="string", length=32, nullable=false)
+     * @Assert\NotBlank()
      */
-    protected $firstName;
+    protected $first_name;
 
     /**
      * @ORM\Column(type="string", length=32, nullable=false)
+     * @Assert\NotBlank()
      */
-    protected $lastName;
+    protected $last_name;
 
     /**
      * @ORM\Column(type="string", length=100, unique=true, nullable=false)
+     * @Assert\NotBlank(
+     *    message = "Username cannot be blank"
+     * )
      */
-    protected $userName;
+    protected $user_name;
 
     /**
      * @ORM\Column(type="string", length=100, unique=true, nullable=false)
-     * @Assert\Email
+     * @Assert\NotBlank(
+     *   message = "Email field cannot be blank."
+     * )
+     * @Assert\Email(
+     *    message = "The email you entered is invalid.",
+     *    checkMX = true
+     * )
      */
     protected $email;
 
     /**
      * @ORM\Column(type="string", length=500, nullable=false)
+     * @Assert\NotBlank(
+     *  message = "The password field cannot be empty."
+     * )
      */
     protected $password;
 
@@ -53,6 +69,10 @@ class User {
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $updated_at;
+
+    public function getId() {
+      return $this->$id;
+    }
 
     /**
      * Get the value of Created At
@@ -103,13 +123,13 @@ class User {
     }
 
     /**
-     * @ORM\Get the value of First Name
+     * Get the value of First Name
      *
      * @return mixed
      */
     public function getFirstName()
     {
-        return $this->firstName;
+        return $this->first_name;
     }
 
     /**
@@ -121,7 +141,7 @@ class User {
      */
     public function setFirstName($firstName)
     {
-        $this->firstName = $firstName;
+        $this->first_name = $firstName;
 
         return $this;
     }
@@ -133,7 +153,7 @@ class User {
      */
     public function getLastName()
     {
-        return $this->lastName;
+        return $this->last_name;
     }
 
     /**
@@ -145,7 +165,7 @@ class User {
      */
     public function setLastName($lastName)
     {
-        $this->lastName = $lastName;
+        $this->last_name = $lastName;
 
         return $this;
     }
@@ -157,7 +177,7 @@ class User {
      */
     public function getUserName()
     {
-        return $this->userName;
+        return $this->user_name;
     }
 
     /**
@@ -169,7 +189,7 @@ class User {
      */
     public function setUserName($userName)
     {
-        $this->userName = $userName;
+        $this->user_name = $userName;
 
         return $this;
     }
@@ -206,8 +226,16 @@ class User {
      * @return self
      */
     public function setPassword($password) {
-        $this->password = password_hash($password, PASSWORD_DEFAULT);
-        return $this;
+        if ($password !== null || $password !== " ") {
+          if (strlen($password) > 10) {
+            return false;
+          }
+
+          $this->password = password_hash($password, PASSWORD_DEFAULT);
+          return $this;
+        }
+
+        return false;
     }
 
     /**
@@ -239,7 +267,7 @@ class User {
      */
     public function setCreatedAtTimeStamp() {
         if (is_null($this->getCreatedAt())) {
-            $this->setCreatedAt(new \DatTime());
+            $this->setCreatedAt(new \DateTime());
         }
     }
 
@@ -248,7 +276,7 @@ class User {
      */
     public function setUpdatedAtTimeStamp() {
         if (is_null($this->getUpdatedAt())) {
-            $this->setUpdatedAt(new \DatTime());
+            $this->setUpdatedAt(new \DateTime());
         }
     }
 }

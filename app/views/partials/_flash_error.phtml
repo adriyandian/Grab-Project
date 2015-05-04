@@ -1,3 +1,7 @@
 <div class="alert alert-error">
-  <strong>ATTN</strong> <?php echo $flash->getFlashMessage('error'); ?>
+  <?php
+  foreach ($flash->getAllFlashMessages() as $flashMessageType => $flashMessage) {
+    ?><p><strong>ATTN!</strong> <?php echo $flashMessage; ?></p><?php
+  }
+  ?>
 </div>

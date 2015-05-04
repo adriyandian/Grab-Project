@@ -28,7 +28,7 @@ class Image {
      * @ORM\ManyToMany(targetEntity="\ImageUploader\Models\HashTag", inversedBy="images")
      * @ORM\JoinTable(name="images_hashtags")
      */
-    protected $hashTags;
+    protected $hash_tags;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -48,10 +48,10 @@ class Image {
     /**
      * @ORM\Column(type="integer", nullable=false)
      */
-    protected $imageSize;
+    protected $image_size;
 
     public function __construct() {
-        $this->hashTags = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->hash_tags = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -157,7 +157,7 @@ class Image {
      */
     public function getImageSize()
     {
-        return $this->imageSize;
+        return $this->image_size;
     }
 
     /**
@@ -169,7 +169,7 @@ class Image {
      */
     public function setImageSize($imageSize)
     {
-        $this->imageSize = $imageSize;
+        $this->image_size = $imageSize;
 
         return $this;
     }

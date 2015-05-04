@@ -7,7 +7,7 @@ if (!defined('APP')) {
 }
 
 if (!defined('APP_MODELS')) {
-    define('APP_MODELS', dirname(__FILE__) . '/app/models/');
+    define('APP_MODELS', dirname(__FILE__) . '/app/Models/');
 }
 
 if (!defined('APP_VIEWS')) {
@@ -26,6 +26,9 @@ if (!defined('LIB')) {
 /** ---------------------------------------------------------------- **/
 require_once 'vendor/autoload.php';
 
+$loader = require 'vendor/autoload.php';
+\Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
+
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 
@@ -33,6 +36,11 @@ use Doctrine\ORM\EntityManager;
  * Set up Doctrine.
  */
 class DoctrineSetup {
+
+    /**
+     * @var DoctrineSetup
+     */
+    protected static $classInstance;
 
     /**
      * @var array $paths - where the entities live.
@@ -50,21 +58,39 @@ class DoctrineSetup {
     protected $dbParams = null;
 
     /**
-     * Constructor to set some core values.
+     * Cannot instantate the class
      */
-    public function __construct(){
-        if (!file_exists('db_config.ini')) {
-            throw new \Exception(
-                'Missing db_config.ini. You can create this from the db_config_sample.ini'
-            );
-        }
+    private function __construct(){}
 
-        $this->dbParams = array(
-            'driver' => 'pdo_mysql',
-            'user' => parse_ini_file('db_config.ini')['DB_USER'],
-            'password' => parse_ini_file('db_config.ini')['DB_PASSWORD'],
-            'dbname' => parse_ini_file('db_config.ini')['DB_NAME']
-        );
+    /**
+     *  Use me to create an instance of the class.
+     *
+     * @return DoctrineSetup
+     */
+    public static function getInstance() {
+      if (self::$classInstance === null) {
+          self::$classInstance = new self();
+      }
+
+      return self::$classInstance;
+    }
+
+    /**
+     *  Call me to set up the required params.
+     */
+    public function setUp() {
+      if (!file_exists('db_config.ini')) {
+          throw new \Exception(
+              'Missing db_config.ini. You can create this from the db_config_sample.ini'
+          );
+      }
+
+      $this->dbParams = array(
+          'driver' => 'pdo_mysql',
+          'user' => parse_ini_file('db_config.ini')['DB_USER'],
+          'password' => parse_ini_file('db_config.ini')['DB_PASSWORD'],
+          'dbname' => parse_ini_file('db_config.ini')['DB_NAME']
+      );
     }
 
     /**
@@ -79,20 +105,68 @@ class DoctrineSetup {
 }
 
 /**
+ *  Basic Entity Manager Container.
+ */
+class EntityManagerContainer
+{
+    /**
+     * @var EntityManagerContainer
+     */
+    private static $instance;
+
+    /**
+     * @var Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
+     * Basic constructor - This class cannot be instantiated
+     */
+    private function __construct()
+    {
+        $ds = DoctrineSetup::getInstance();
+        $ds->setUp();
+        $this->em = $ds->getEntityManager();
+    }
+
+    /**
+     * Get an instance of this class.
+     */
+    public static function getInstance()
+    {
+        if (null === self::$instance) {
+            self::$instance= new self();
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * Get the entityManager
+     *
+     * @return Doctrine\ORM\EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->em;
+    }
+}
+
+/**
  * Function that can be called through out the app.
  *
  * @return EntityManager
  */
 function getEntityManager() {
-    $ds = new DoctrineSetup();
-    return $ds->getEntityManager();
+  return EntityManagerContainer::getInstance()->getEntityManager();
 }
 
 /**
  * Function that returns the conection to the database.
  */
 function getConnection() {
-    $ds = new DoctrineSetup();
+    $ds = DoctrineSetup::getInstance();
+    $ds->setUp();
     return $ds->getEntityManager()->getConnection();
 }
 

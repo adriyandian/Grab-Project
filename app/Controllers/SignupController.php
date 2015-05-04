@@ -5,6 +5,8 @@ namespace ImageUploader\Controllers;
 use \Freya\Factory\Pattern;
 use \Freya\Flash\Flash;
 use \Lib\Session\Encrypt\EncryptHandler;
+use \ImageUploader\Models\User;
+use Symfony\Component\Validator\Validation as Validator;
 
 class SignupController implements \Lib\Controller\BaseController  {
 
@@ -19,12 +21,52 @@ class SignupController implements \Lib\Controller\BaseController  {
 
     public static function createAction($params){
       $postParams = $params->request()->post();
+      $flash = new Flash();
 
       if ($postParams['password'] !== $postParams['repassword']) {
-        $flash = new Flash();
         $flash->createFlash('error', 'Your passwords do not match.');
+        self::createEncryptedPostParams($postParams);
         $params->redirect('/signup/error');
       }
+
+      $user = new User();
+
+      if (!$user->setPassword($postParams['password'])) {
+        $flash->createFlash('error', 'Password length myst be 10 characters');
+        self::createEncryptedPostParams($postParams);
+        $params->redirect('/signup/error');
+      }
+
+      $user->setFirstName($postParams['firstname'])
+           ->setLastName($postParams['lastname'])
+           ->setUserName($postParams['username'])
+           ->setEmail($postParams['email'])
+           ->setCreatedAtTimeStamp();
+
+      $validator = Validator::createValidatorBuilder();
+      $validator->enableAnnotationMapping();
+
+      $errors = $validator->getValidator()->validate($user);
+
+      if (count($errors) > 0) {
+          foreach($errors as $error) {
+            $flash->createFlash(
+                $error->getPropertyPath() . 'error',
+                $error->getMessage()
+            );
+        }
+
+        self::createEncryptedPostParams($postParams);
+        $params->redirect('/signup/error');
+      }
+
+      self::destroyEncryptedPostParams();
+
+      getEntityManager()->persist($user);
+      getEntityManager()->flush();
+
+      $flash->createFlash('success', ' You have signed up successfully! Please sign in!');
+      $params->redirect('/signin');
     }
 
 
@@ -52,7 +94,6 @@ class SignupController implements \Lib\Controller\BaseController  {
     protected static function createEncryptedPostParams($postParams) {
       $encrypt = new EncryptHandler();
       $encrypt->write('error', $postParams);
-      $encrypt->gc(15);
     }
 
     protected static function getEncryptedPostParams() {
@@ -60,11 +101,18 @@ class SignupController implements \Lib\Controller\BaseController  {
       $encryptedPostParamsData = $encrypt->read('error');
 
       if ($encryptedPostParamsData != null) {
-        $encrypt->destroy('error');
         return $encryptedPostParamsData;
       }
 
       return null;
+    }
+
+    protected static function destroyEncryptedPostParams() {
+      $encrypt = new EncryptHandler();
+      $encryptedPostParamsData = $encrypt->read('error');
+      if ($encryptedPostParamsData !== null) {
+        $encrypt->destroy('error');
+      }
     }
 
 }

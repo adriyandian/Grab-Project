@@ -2,9 +2,6 @@
 // Use  our bootstrap file.
 require_once 'bootstrap.php';
 
-$loader = require 'vendor/autoload.php';
-\Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
-
 /** ---------------------------------------------------------------- **/
 // We want to use the console tool so we need to register the
 // applications EntityManger to the console.
@@ -23,6 +20,7 @@ ConsoleRunner::createHelperSet($entityManager);
 $helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
     'db' => new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($connection),
     'dialog' => new \Symfony\Component\Console\Helper\DialogHelper(),
+    'em' => new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($entityManager)
 ));
 
 $cli = new Application('Doctrine Command Line Interface', \Doctrine\ORM\Version::VERSION);

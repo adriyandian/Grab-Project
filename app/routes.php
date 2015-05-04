@@ -16,6 +16,10 @@ $app->get('/signup', function(){
     Controller\SignupController::showSignupForm();
 });
 
+$app->get('/signin', function() use ($app){
+    Controller\SessionController::showSignInForm($app);
+});
+
 $app->get('/signup/error', function(){
     Controller\SignupController::showSignupForm();
 });

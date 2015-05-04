@@ -21,17 +21,17 @@ class HashTag {
     /**
      * @ORM\Column(type="string", nullable=false)
      */
-    protected $hashTag;
+    protected $hash_tag;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $createdAt;
+    protected $created_at;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $updatedAt;
+    protected $updated_at;
 
     /**
      * @ORM\ManyToMany(targetEntity="\ImageUploader\Models\Image", mappedBy="hashTags")
@@ -50,7 +50,7 @@ class HashTag {
      */
     public function getHashTag()
     {
-        return $this->hashTag;
+        return $this->hash_tag;
     }
 
     /**
@@ -63,9 +63,9 @@ class HashTag {
     public function setHashTag($hashTag)
     {
         if (strpos($hasTag, '#') != false && strpos($hasTag, '#') == 0) {
-            $this->hashTag = $hashTag;
+            $this->hash_tag = $hashTag;
         } else {
-            throw new \Exception('Missing # at the beginning. Tag is not valid.');
+            return false;
         }
 
         return $this;
@@ -78,7 +78,7 @@ class HashTag {
      */
     public function getCreatedAt()
     {
-        return $this->createdAt;
+        return $this->create_at;
     }
 
     /**
@@ -90,7 +90,7 @@ class HashTag {
      */
     public function setCreatedAt($createdAt)
     {
-        $this->createdAt = $createdAt;
+        $this->created_at = $createdAt;
 
         return $this;
     }
@@ -102,7 +102,7 @@ class HashTag {
      */
     public function getUpdatedAt()
     {
-        return $this->updatedAt;
+        return $this->updated_at;
     }
 
     /**
@@ -114,7 +114,7 @@ class HashTag {
      */
     public function setUpdatedAt($updatedAt)
     {
-        $this->updatedAt = $updatedAt;
+        $this->updated_at = $updatedAt;
 
         return $this;
     }
