@@ -13,6 +13,7 @@ use Symfony\Component\Console\Application;
 
 // Use our entity manager.
 $entityManager = getEntityManager();
+
 $connection = getConnection();
 
 ConsoleRunner::createHelperSet($entityManager);

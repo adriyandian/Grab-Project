@@ -48,6 +48,55 @@ class DoctrineSetup {
     protected $paths = array(APP_MODELS);
 
     /**
+     * @var bool are we in development mode?
+     */
+    protected $isDevMode = true;
+
+    /**
+     * @var array database paramters
+     */
+    protected $dbParams;
+
+    /**
+     * Set up the database connection information.
+     *
+     * We will explode if we cannot find the db_config.ini
+     */
+    public function __construct() {
+        if (!file_exists('db_config.ini')) {
+            throw new \Exception(
+                'Missing db_config.ini. You can create this from the db_config_sample.ini'
+            );
+        }
+
+        // Database info.
+        $this->dbParams = array(
+            'driver' => 'pdo_mysql',
+            'user' => parse_ini_file('db_config.ini')['DB_USER'],
+            'password' => parse_ini_file('db_config.ini')['DB_PASSWORD'],
+            'dbname' => parse_ini_file('db_config.ini')['DB_NAME']
+        );
+    }
+
+    /**
+     * Return the entity manager for managing the database.
+     *
+     * @return Doctrine\ORM\EntityManager instance
+     */
+    public function getEntityManager() {
+        // finally set up and connect.
+        $config = Setup::createAnnotationMetadataConfiguration($this->paths, $this->isDevMode, null, null, false);
+        $entityManager = EntityManager::create($this->dbParams, $config);
+
+        return $entityManager;
+    }
+}
+
+// Function to easily get the Entity manager
+// when ever we need it.
+function getEntityManager() {
+    $ds = new DoctrineSetup();
+    return $ds->getEntityManager();
      * @var bool $isDevMode - Are we considered "in development."
      */
     protected $isDevMode = false;
