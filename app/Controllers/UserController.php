@@ -8,7 +8,7 @@ use \Lib\Session\Encrypt\EncryptHandler;
 use \ImageUploader\Models\User;
 use Symfony\Component\Validator\Validation as Validator;
 
-class UserController implements \Lib\Controller\BaseController {
+class UserController implements \Lib\Controller\BaseController  {
 
   public static function indexAction($params = null) {
   }

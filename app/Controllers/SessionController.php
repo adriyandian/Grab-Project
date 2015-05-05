@@ -6,9 +6,9 @@ use \Freya\Factory\Pattern;
 use \Freya\Flash\Flash;
 use \Lib\Session\Encrypt\EncryptHandler;
 use \ImageUploader\Models\User;
-use Symfony\Component\Validator\Validation as Validator;
+use \Lib\Session\ApplicationSessionHandler;
 
-class SessionController implements \Lib\Controller\BaseController  {
+class SessionController implements \Lib\Controller\BaseController   {
 
     const KEY = 'image_uploader_';
 
@@ -39,12 +39,11 @@ class SessionController implements \Lib\Controller\BaseController  {
             $params->redirect('/signin');
         }
 
-        $_SESSION[KEY . $userObject[0]->getId()] = serialize($userObject[0]->getUserName());
-        $_SESSION[KEY . $userObject[0]->getId() . '_created'] = time();
+        $session = ApplicationSessionHandler::getInstance('\ImageUploader\Models\User', 'getEntityManager');
+        $session->createSession($userObject[0]->auth_token);
 
         $flash->createFlash('success', 'Welcome back ' . $userObject[0]->getFirstName());
         $params->redirect('/dashboard');
-
     }
 
 
