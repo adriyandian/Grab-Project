@@ -1,13 +1,20 @@
 {
   "require": {
     "doctrine/orm": "2.4.*",
+    "doctrine/migrations": "1.0.*@dev",
+    "doctrine/doctrine-bundle": "^1.4",
+    "symfony/validator": "2.8.*@dev",
+    "symfony/doctrine-bridge": "2.8.*@dev",
     "slim/slim": "~2.6",
     "freya/freya-exception": "0.0.7",
     "freya/freya-loader": "0.2.2",
     "freya/freya-templates": "0.1.2",
-    "freya/freya-factory": "0.0.8"
+    "freya/freya-factory": "0.0.8",
+    "freya/freya-flash": "0.0.1"
   },
   "autoload": {
-    "psr-4": {"": ""}
+    "psr-4": {
+      "Lib\\": "lib/"
+    }
   }
 }

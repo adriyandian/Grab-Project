@@ -2,12 +2,12 @@
 /** ---------------------------------------------------------------- **/
 // We need some constants.
 /** ---------------------------------------------------------------- **/
-if (!defined('APP_MODELS')) {
-    define('APP_MODELS', dirname(__FILE__) . '/app/models/');
+if (!defined('APP')) {
+    define('APP', dirname(__FILE__) . '/app/');
 }
 
-if (!defined('APP')) {
-    define('APP', 'app/');
+if (!defined('APP_MODELS')) {
+    define('APP_MODELS', dirname(__FILE__) . '/app/Models/');
 }
 
 if (!defined('APP_VIEWS')) {
@@ -26,15 +26,24 @@ if (!defined('LIB')) {
 /** ---------------------------------------------------------------- **/
 require_once 'vendor/autoload.php';
 
+$loader = require 'vendor/autoload.php';
+\Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
+
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
-var_dump(DB_SCRIPTS);
+
 /**
  * Set up Doctrine.
  */
 class DoctrineSetup {
+
     /**
-     * @var array paths
+     * @var DoctrineSetup
+     */
+    protected static $classInstance;
+
+    /**
+     * @var array $paths - where the entities live.
      */
     protected $paths = array(APP_MODELS);
 
@@ -88,6 +97,126 @@ class DoctrineSetup {
 function getEntityManager() {
     $ds = new DoctrineSetup();
     return $ds->getEntityManager();
+     * @var bool $isDevMode - Are we considered "in development."
+     */
+    protected $isDevMode = false;
+
+    /**
+     * @var array $dbParams - The database paramters.
+     */
+    protected $dbParams = null;
+
+    /**
+     * Cannot instantate the class
+     */
+    private function __construct(){}
+
+    /**
+     *  Use me to create an instance of the class.
+     *
+     * @return DoctrineSetup
+     */
+    public static function getInstance() {
+      if (self::$classInstance === null) {
+          self::$classInstance = new self();
+      }
+
+      return self::$classInstance;
+    }
+
+    /**
+     *  Call me to set up the required params.
+     */
+    public function setUp() {
+      if (!file_exists('db_config.ini')) {
+          throw new \Exception(
+              'Missing db_config.ini. You can create this from the db_config_sample.ini'
+          );
+      }
+
+      $this->dbParams = array(
+          'driver' => 'pdo_mysql',
+          'user' => parse_ini_file('db_config.ini')['DB_USER'],
+          'password' => parse_ini_file('db_config.ini')['DB_PASSWORD'],
+          'dbname' => parse_ini_file('db_config.ini')['DB_NAME']
+      );
+    }
+
+    /**
+     * Get the entity manager for use through out the app.
+     *
+     * @return EntityManager
+     */
+    public function getEntityManager() {
+        $config = Setup::createAnnotationMetadataConfiguration($this->paths, $this->isDevMode, null, null, false);
+        return EntityManager::create($this->dbParams, $config);
+    }
+}
+
+/**
+ *  Basic Entity Manager Container.
+ */
+class EntityManagerContainer
+{
+    /**
+     * @var EntityManagerContainer
+     */
+    private static $instance;
+
+    /**
+     * @var Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
+     * Basic constructor - This class cannot be instantiated
+     */
+    private function __construct()
+    {
+        $ds = DoctrineSetup::getInstance();
+        $ds->setUp();
+        $this->em = $ds->getEntityManager();
+    }
+
+    /**
+     * Get an instance of this class.
+     */
+    public static function getInstance()
+    {
+        if (null === self::$instance) {
+            self::$instance= new self();
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * Get the entityManager
+     *
+     * @return Doctrine\ORM\EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->em;
+    }
+}
+
+/**
+ * Function that can be called through out the app.
+ *
+ * @return EntityManager
+ */
+function getEntityManager() {
+  return EntityManagerContainer::getInstance()->getEntityManager();
+}
+
+/**
+ * Function that returns the conection to the database.
+ */
+function getConnection() {
+    $ds = DoctrineSetup::getInstance();
+    $ds->setUp();
+    return $ds->getEntityManager()->getConnection();
 }
 
 /** ---------------------------------------------------------------- **/
@@ -107,7 +236,7 @@ $autoLoader = new AutoLoader();
 
 // Set up custom name spaces.
 $autoLoader->registerNameSpaces(array(
-    'ImageUploader' => dirname(__FILE__) . '/' . APP,
+    'ImageUploader' => APP,
     'Lib'=> dirname(__FILE__) . '/' . LIB
 ));
 

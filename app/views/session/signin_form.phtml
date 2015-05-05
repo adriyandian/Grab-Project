@@ -1,0 +1,17 @@
+<?php
+if (!empty($flash->getAllFlashMessages(false))) {
+  $template->renderPartial('_flash_error', array('flash' => $flash));
+}
+?>
+
+<form action="/session/create" method="POST">
+    <label>
+        User Name
+        <input type="text" name="username" id="user-name" />
+    </label>
+    <label>
+        Password
+        <input type="password" name="password" id="password" />
+    </label>
+    <input type="submit" value="Sign In" />
+</form>

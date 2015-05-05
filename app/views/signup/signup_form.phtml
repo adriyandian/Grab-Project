@@ -1,0 +1,33 @@
+<?php
+if (!empty($flash->getAllFlashMessages(false))) {
+  $template->renderPartial('_flash_error', array('flash' => $flash));
+}
+?>
+
+<form action="/signup/new" method="POST">
+    <label>
+        First Name
+        <input type="text" name="firstname" id="first-name" value="<?php echo $formData['firstname']; ?>"/>
+    </label>
+    <label>
+        Last Name
+        <input type="text" name="lastname" id="last-name" value="<?php echo $formData['lastname']; ?>" />
+    </label>
+    <label>
+        User Name
+        <input type="text" name="username" id="user-name" value="<?php echo $formData['username']; ?>" />
+    </label>
+    <label>
+        Email
+        <input type="email" name="email" id="email" value="<?php echo $formData['email']; ?>" />
+    </label>
+    <label>
+        Password
+        <input type="password" name="password" id="password" />
+    </label>
+    <label>
+        Password Again
+        <input type="password" name="repassword" id="password" />
+    </label>
+    <input type="submit" value="Register" />
+</form>
