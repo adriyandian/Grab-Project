@@ -20,8 +20,9 @@ $app->get('/signin', function(){
     Controller\SessionController::showSignInForm();
 });
 
-$app->get('/dashboard', function(){
-    Controller\DashboardController::indexAction();
+$app->get('/dashboard', function() use($app){
+    $controller = new Controller\ApplicationController(new Controller\DashboardController());
+    $controller::indexAction($app);
 });
 
 $app->post('/session/create', function() use ($app){
