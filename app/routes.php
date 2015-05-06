@@ -1,5 +1,5 @@
 <?php
-use \ImageUploader\Controllers as Controller;
+use \GP\Controllers as Controller;
 /** ---------------------------------------------------------------- **/
 // Routes.
 //

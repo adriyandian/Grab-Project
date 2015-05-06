@@ -1,13 +1,14 @@
 <?php
 
-namespace ImageUploader\Controllers;
+namespace GP\Controllers;
 
 use \Freya\Factory\Pattern;
 use \Freya\Flash\Flash;
-use \Lib\Session\Encrypt\EncryptHandler;
-use \ImageUploader\Models\User;
+use \SessionManagement\Encrypt\EncryptHandler;
+use \ControllerManagement\BaseController;
+use \GP\Models\User;
 
-class SessionController implements \Lib\Controller\BaseController   {
+class SessionController implements BaseController   {
 
     const KEY = 'image_uploader_';
 
@@ -24,7 +25,7 @@ class SessionController implements \Lib\Controller\BaseController   {
         $postParams = $params->request()->post();
         $flash = new Flash();
 
-        $user = getEntityManager()->getRepository('\ImageUploader\Models\User');
+        $user = getEntityManager()->getRepository('\GP\Models\User');
 
         $userObject = $user->findBy(array('user_name' => $postParams['username']));
 
@@ -38,7 +39,7 @@ class SessionController implements \Lib\Controller\BaseController   {
             $params->redirect('/signin');
         }
 
-        Pattern::create('\Lib\Session\ApplicationSessionHandler')->createSession($userObject[0]->getAuthToken());
+        Pattern::create('\\SessionManagement\ApplicationSessionHandler')->createSession($userObject[0]->getAuthToken());
         $flash->createFlash('success', 'Welcome back ' . $userObject[0]->getFirstName());
         $params->redirect('/dashboard');
     }
@@ -50,7 +51,7 @@ class SessionController implements \Lib\Controller\BaseController   {
 
     public static function deleteAction($params){
         $flash = new Flash();
-        Pattern::create('\Lib\Session\ApplicationSessionHandler')->destroySession();
+        Pattern::create('\\SessionManagement\ApplicationSessionHandler')->destroySession();
         $flash->createFlash('success', 'See you next time!');
         $params->redirect('/');
     }
@@ -58,7 +59,7 @@ class SessionController implements \Lib\Controller\BaseController   {
     public static function showSignInForm($params) {
         $flash = new Flash();
 
-        if (Pattern::create('\Lib\Session\ApplicationSessionHandler')->getCurrentUser() != null) {
+        if (Pattern::create('\SessionManagement\ApplicationSessionHandler')->getCurrentUser() != null) {
             $flash->createFlash('notice', 'You already are signed in.');
             $params->redirect('/dashboard');
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace ImageUploader\Controllers;
+namespace GP\Controllers;
 
 /**
  *  The core Application controller.
@@ -9,7 +9,7 @@ class ApplicationController {
 
     protected static $controllerClass;
 
-    public function __construct(\Lib\Controller\BaseController $controller) {
+    public function __construct(\ControllerManagement\BaseController $controller) {
         self::$controllerClass = $controller;
     }
 

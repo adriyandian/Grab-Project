@@ -1,6 +1,6 @@
 <?php
 
-namespace ImageUploader\Models;
+namespace GP\Models;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,13 +19,13 @@ class Image {
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\ImageUploader\Models\User")
+     * @ORM\ManyToOne(targetEntity="\GP\Models\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user_id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\ImageUploader\Models\HashTag", inversedBy="images")
+     * @ORM\ManyToMany(targetEntity="\GP\Models\HashTag", inversedBy="images")
      * @ORM\JoinTable(name="images_hashtags")
      */
     protected $hash_tags;

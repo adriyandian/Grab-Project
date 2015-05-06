@@ -14,7 +14,9 @@
   },
   "autoload": {
     "psr-4": {
-      "Lib\\": "lib/"
+      "ControllerManagement\\": "lib/ControllerManagement/",
+      "SessionManagement\\": "lib/SessionManagement/",
+      "Validators\\": "lib/Validators/"
     }
   }
 }

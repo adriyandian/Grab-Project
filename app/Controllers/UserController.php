@@ -1,14 +1,15 @@
 <?php
 
-namespace ImageUploader\Controllers;
+namespace GP\Controllers;
 
 use \Freya\Factory\Pattern;
 use \Freya\Flash\Flash;
-use \Lib\Session\Encrypt\EncryptHandler;
-use \ImageUploader\Models\User;
+use \SessionManagement\Encrypt\EncryptHandler;
+use \ControllerManagement\BaseController;
+use \GP\Models\User;
 use Symfony\Component\Validator\Validation as Validator;
 
-class UserController implements \Lib\Controller\BaseController  {
+class UserController implements BaseController  {
 
   public static function indexAction($params = null) {
   }

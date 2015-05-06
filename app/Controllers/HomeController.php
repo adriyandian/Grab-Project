@@ -1,10 +1,11 @@
 <?php
 
-namespace ImageUploader\Controllers;
+namespace GP\Controllers;
 
 use \Freya\Factory\Pattern;
+use \ControllerManagement\BaseController;
 
-class HomeController implements \Lib\Controller\BaseController  {
+class HomeController implements BaseController  {
 
     public static function indexAction($params = null) {
 

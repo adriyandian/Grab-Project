@@ -1,15 +1,16 @@
 <?php
 
-namespace ImageUploader\Controllers;
+namespace GP\Controllers;
 
 use \Freya\Factory\Pattern;
-use \Lib\Session\ApplicationSessionHandler;
+use \SessionManagement\ApplicationSessionHandler;
+use \ControllerManagement\BaseController;
 use \Freya\Flash\Flash;
 
-class DashboardController implements \Lib\Controller\BaseController   {
+class DashboardController implements BaseController   {
 
     public function beforeAction($actionName, $actionArgs) {
-        if (Pattern::create('\Lib\Session\ApplicationSessionHandler')->getCurrentUser() === null) {
+        if (Pattern::create('\SessionManagement\ApplicationSessionHandler')->getCurrentUser() === null) {
             $flash = new Flash();
             $flash->createFlash('error', 'You have to sign in to access that.');
             $actionArgs[0]->redirect('/signin');

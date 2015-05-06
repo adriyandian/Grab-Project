@@ -187,11 +187,8 @@ use Freya\Loader\AutoLoader;
 // Instantiation.
 $autoLoader = new AutoLoader();
 
-// Set up custom name spaces.
-$autoLoader->registerNameSpaces(array(
-    'ImageUploader' => APP,
-    'Lib'=> dirname(__FILE__) . '/' . LIB
-));
+// Set up custom name space.
+$autoLoader->registerNameSpace('GP', APP);
 
 // Now register the autoloader.
 $autoLoader->register_auto_loader();
@@ -227,10 +224,10 @@ $dependencies = array(
             )
         )
     ),
-    '\Lib\Session\ApplicationSessionHandler' => array(
+    '\SessionManagement\ApplicationSessionHandler' => array(
         'params' => array(
             'getEntityManager',
-            '\ImageUploader\Models\User'
+            '\GP\Models\User'
         )
     )
 );

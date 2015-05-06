@@ -1,10 +1,10 @@
 <?php
 
-namespace ImageUploader\Models;
+namespace GP\Models;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use \Lib\Validators\UniqueValidator\Constraints as CustomAssert;
+use \Validators\UniqueValidator\Constraints as CustomAssert;
 
 /**
  * @ORM\Entity
@@ -41,7 +41,7 @@ class User {
      * )
      * @CustomAssert\UserName(
      *     entityManager = "getEntityManager",
-     *     entityClass = "\ImageUploader\Models\User"
+     *     entityClass = "\GP\Models\User"
      * )
      */
     protected $user_name;
@@ -57,7 +57,7 @@ class User {
      * )
      * @CustomAssert\Email(
      *     entityManager = "getEntityManager",
-     *     entityClass = "\ImageUploader\Models\User"
+     *     entityClass = "\GP\Models\User"
      * )
      */
     protected $email;

@@ -1,6 +1,6 @@
 <?php
 
-namespace ImageUploader\Models;
+namespace GP\Models;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,7 +34,7 @@ class HashTag {
     protected $updated_at;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\ImageUploader\Models\Image", mappedBy="hashTags")
+     * @ORM\ManyToMany(targetEntity="\GP\Models\Image", mappedBy="hashTags")
      */
     protected $images;
 
