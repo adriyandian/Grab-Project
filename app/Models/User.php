@@ -8,6 +8,7 @@ use \Lib\Validators\UniqueValidator\Constraints as CustomAssert;
 
 /**
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="users", uniqueConstraints={
  *   @ORM\UniqueConstraint(name="user", columns={"user_name", "email"})}
  * )
@@ -79,6 +80,11 @@ class User {
      */
     protected $updated_at;
 
+    /**
+     * @ORM\Column(type="string", length=32, nullable=true)
+     */
+    protected $auth_token;
+
     public function getId() {
       return $this->id;
     }
@@ -88,8 +94,7 @@ class User {
      *
      * @return mixed
      */
-    public function getCreatedAt()
-    {
+    public function getCreatedAt() {
         return $this->created_at;
     }
 
@@ -100,8 +105,7 @@ class User {
      *
      * @return self
      */
-    public function setCreatedAt(\DateTime $created_at = null)
-    {
+    public function setCreatedAt(\DateTime $created_at = null) {
         $this->created_at = $created_at;
 
         return $this;
@@ -112,8 +116,7 @@ class User {
      *
      * @return mixed
      */
-    public function getUpdatedAt()
-    {
+    public function getUpdatedAt() {
         return $this->updated_at;
     }
 
@@ -124,8 +127,7 @@ class User {
      *
      * @return self
      */
-    public function setUpdatedAt(\DateTime $updated_at = null)
-    {
+    public function setUpdatedAt(\DateTime $updated_at = null) {
         $this->updated_at = $updated_at;
 
         return $this;
@@ -136,8 +138,7 @@ class User {
      *
      * @return mixed
      */
-    public function getFirstName()
-    {
+    public function getFirstName() {
         return $this->first_name;
     }
 
@@ -148,8 +149,7 @@ class User {
      *
      * @return self
      */
-    public function setFirstName($firstName)
-    {
+    public function setFirstName($firstName) {
         $this->first_name = $firstName;
 
         return $this;
@@ -160,8 +160,7 @@ class User {
      *
      * @return mixed
      */
-    public function getLastName()
-    {
+    public function getLastName() {
         return $this->last_name;
     }
 
@@ -172,8 +171,7 @@ class User {
      *
      * @return self
      */
-    public function setLastName($lastName)
-    {
+    public function setLastName($lastName) {
         $this->last_name = $lastName;
 
         return $this;
@@ -184,8 +182,7 @@ class User {
      *
      * @return mixed
      */
-    public function getUserName()
-    {
+    public function getUserName() {
         return $this->user_name;
     }
 
@@ -196,8 +193,7 @@ class User {
      *
      * @return self
      */
-    public function setUserName($userName)
-    {
+    public function setUserName($userName) {
         $this->user_name = $userName;
 
         return $this;
@@ -208,8 +204,7 @@ class User {
      *
      * @return mixed
      */
-    public function getEmail()
-    {
+    public function getEmail() {
         return $this->email;
     }
 
@@ -220,8 +215,7 @@ class User {
      *
      * @return self
      */
-    public function setEmail($email)
-    {
+    public function setEmail($email) {
         $this->email = $email;
 
         return $this;
@@ -265,8 +259,29 @@ class User {
      *
      * @return hash
      */
-    private function getPassword(){
+    private function getPassword() {
         return $this->password;
+    }
+
+    /**
+     * set the users auth token.
+     *
+     * @param string $authToken
+     * @return self
+     */
+    public function setAuthToken($authToken) {
+        $this->auth_token = $authToken;
+
+        return $this;
+    }
+
+    /**
+     * Gets the users auth token.
+     *
+     * @return string
+     */
+    public function getAuthToken() {
+        return $this->auth_token;
     }
 
     /**
@@ -275,6 +290,15 @@ class User {
     public function setCreatedAtTimeStamp() {
         if (is_null($this->getCreatedAt())) {
             $this->setCreatedAt(new \DateTime());
+        }
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function createAuthToken() {
+        if (is_null($this->getAuthToken())) {
+            $this->setAuthToken(hash(md5, $this->getUserName()));
         }
     }
 

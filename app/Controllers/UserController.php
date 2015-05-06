@@ -24,7 +24,7 @@ class UserController implements \Lib\Controller\BaseController  {
     if ($postParams['password'] !== $postParams['repassword']) {
       $flash->createFlash('error', 'Your passwords do not match.');
       self::createEncryptedPostParams($postParams);
-      $params->redirect('/signup/error');
+      $params->redirect('/signup');
     }
 
     $user = new User();
@@ -33,14 +33,13 @@ class UserController implements \Lib\Controller\BaseController  {
       var_dump('here');
       $flash->createFlash('error', 'Password length myst be 10 characters');
       self::createEncryptedPostParams($postParams);
-      $params->redirect('/signup/error');
+      $params->redirect('/signup');
     }
 
     $user->setFirstName($postParams['firstname'])
          ->setLastName($postParams['lastname'])
          ->setUserName($postParams['username'])
-         ->setEmail($postParams['email'])
-         ->setCreatedAtTimeStamp();
+         ->setEmail($postParams['email']);
 
     $validator = Validator::createValidatorBuilder();
     $validator->enableAnnotationMapping();
@@ -56,7 +55,7 @@ class UserController implements \Lib\Controller\BaseController  {
       }
 
       self::createEncryptedPostParams($postParams);
-      $params->redirect('/signup/error');
+      $params->redirect('/signup');
     }
 
     self::destroyEncryptedPostParams();
