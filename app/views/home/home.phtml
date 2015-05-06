@@ -1,3 +1,9 @@
+<?php
+if (!empty($flash->getAllFlashMessages(false))) {
+  $template->renderPartial('_flash', array('flash' => $flash));
+}
+?>
+
 <h1>Welcome</h1>
 
 <a href="/signup">Signup</a>

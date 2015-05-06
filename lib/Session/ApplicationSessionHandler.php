@@ -4,75 +4,55 @@ namespace Lib\Session;
 
 class ApplicationSessionHandler {
 
-    protected static $classInstance;
+    const SESSION_NAME = 'auth_token';
 
-    protected static $authToken;
+    protected $sessionName;
 
-    private static $userEntityClass;
+    protected $entityManager;
 
-    private static $entityManager;
+    protected $userEntityClass;
 
-    private function __construct() {
+    public function __construct($entityManager, $userEntityClass) {
+        if (!class_exists($userEntityClass)) {
+            throw new \Exception('User Entity Class must be a class');
+        }
+
+        if (!is_callable($entityManager)) {
+            throw new \Exception('Entitymanager must be callabale');
+        }
+
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-    }
 
-    public static function getInstance($entityClass = null, $entityManager = null) {
-        if (self::$classInstance === null) {
-            if ($entityClass != null && !class_exists($entityClass)) {
-                throw new \Exception('Entity class passed in does not exist.');
-            }
-
-            if ($entityManager != null && !is_callable($entityManager)) {
-                throw new \Exception('Entity manager passed in is not callable.');
-            }
-
-            if (self::$userEntityClass === null) {
-                self::$userEntityClass = $entityClass;
-            }
-
-            if (self::$entityManager === null) {
-                self::$entityManager = $entityManager;
-            }
-
-            self::$classInstance = new self();
-        }
-
-        return self::$classInstance;
+        $this->entityManager   = $entityManager;
+        $this->userEntityClass = $userEntityClass;
     }
 
     public function createSession($userAuth) {
-        if (self::$authToken === null) {
-            self::$authToken = $userAuth ;
-
-            $_SESSION[$userAuth] = $userAuth;
-        }
+        $_SESSION[self::SESSION_NAME] = $userAuth;
     }
 
     public function getCurrentUser() {
-        if (self::$authToken === null) {
-            return null;
+        $entityManager = call_user_func($this->entityManager);
+        $user = $entityManager->getRepository($this->userEntityClass)
+                              ->findBy(array(
+                                  'auth_token' => $_SESSION[self::SESSION_NAME]
+                                ));
+
+        if (!empty($user)) {
+            return $user[0];
         }
 
-        $user = $entityManager->getRepository($userEntityClass);
-        $userObject = $user->findBy(array('auth_toke' => self::$authToken));
-
-        if (empty($userObject)) {
-            return null;
-        }
-
-        return $userObject[0];
+        return null;
     }
 
     public function destroySession() {
-        if (self::$authToken === null) {
-            return false;
+        if (isset($_SESSION[self::SESSION_NAME])) {
+            unset($_SESSION[self::SESSION_NAME]);
+            return true;
         }
 
-        unset($_SESSION[self::$authToken]);
-        self::$authToken = null;
-
-        return true;
+        return false;
     }
 }

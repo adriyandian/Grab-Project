@@ -1,0 +1,9 @@
+<?php
+foreach ($flash->getAllFlashMessages() as $flashMessageType => $flashMessage) {
+    ?>
+    <div class="alert alert-<?php$flashMessageType?>">
+        <?php echo $flashMessage; ?>
+    </div>
+    <?php
+}
+?>

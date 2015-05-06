@@ -1,7 +1,9 @@
 <?php
 if (!empty($flash->getAllFlashMessages(false))) {
-  $template->renderPartial('_flash_error', array('flash' => $flash));
+  $template->renderPartial('_flash', array('flash' => $flash));
 }
 ?>
 
 Hello world!
+
+<a href="/logout">Log out</a>

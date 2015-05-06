@@ -9,9 +9,7 @@ use \Freya\Flash\Flash;
 class DashboardController implements \Lib\Controller\BaseController   {
 
     public function beforeAction($actionName, $actionArgs) {
-        $session = ApplicationSessionHandler::getInstance();
-
-        if ($session->getCurrentUser() === null) {
+        if (Pattern::create('\Lib\Session\ApplicationSessionHandler')->getCurrentUser() === null) {
             $flash = new Flash();
             $flash->createFlash('error', 'You have to sign in to access that.');
             $actionArgs[0]->redirect('/signin');

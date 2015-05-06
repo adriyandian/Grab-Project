@@ -226,6 +226,12 @@ $dependencies = array(
                 )
             )
         )
+    ),
+    '\Lib\Session\ApplicationSessionHandler' => array(
+        'params' => array(
+            'getEntityManager',
+            '\ImageUploader\Models\User'
+        )
     )
 );
 

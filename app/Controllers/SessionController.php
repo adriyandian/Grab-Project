@@ -6,7 +6,6 @@ use \Freya\Factory\Pattern;
 use \Freya\Flash\Flash;
 use \Lib\Session\Encrypt\EncryptHandler;
 use \ImageUploader\Models\User;
-use \Lib\Session\ApplicationSessionHandler;
 
 class SessionController implements \Lib\Controller\BaseController   {
 
@@ -39,24 +38,31 @@ class SessionController implements \Lib\Controller\BaseController   {
             $params->redirect('/signin');
         }
 
-        $session = ApplicationSessionHandler::getInstance('\ImageUploader\Models\User', 'getEntityManager');
-        $session->createSession($userObject[0]->auth_token);
-
+        Pattern::create('\Lib\Session\ApplicationSessionHandler')->createSession($userObject[0]->getAuthToken());
         $flash->createFlash('success', 'Welcome back ' . $userObject[0]->getFirstName());
         $params->redirect('/dashboard');
     }
 
 
     public static function updateAction($params){
-
     }
 
 
     public static function deleteAction($params){
-
+        $flash = new Flash();
+        Pattern::create('\Lib\Session\ApplicationSessionHandler')->destroySession();
+        $flash->createFlash('success', 'See you next time!');
+        $params->redirect('/');
     }
 
-    public static function showSignInForm() {
+    public static function showSignInForm($params) {
+        $flash = new Flash();
+
+        if (Pattern::create('\Lib\Session\ApplicationSessionHandler')->getCurrentUser() != null) {
+            $flash->createFlash('notice', 'You already are signed in.');
+            $params->redirect('/dashboard');
+        }
+
         $data = self::getEncryptedPostParams();
         Pattern::create('\Freya\Templates\Builder')->renderView(
             'session/signin_form',
