@@ -298,7 +298,7 @@ class User {
      */
     public function createAuthToken() {
         if (is_null($this->getAuthToken())) {
-            $this->setAuthToken(hash(md5, $this->getUserName()));
+            $this->setAuthToken(hash('md5', $this->getUserName()));
         }
     }
 

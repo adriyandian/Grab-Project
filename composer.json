@@ -16,7 +16,11 @@
     "psr-4": {
       "ControllerManagement\\": "lib/ControllerManagement/",
       "SessionManagement\\": "lib/SessionManagement/",
-      "Validators\\": "lib/Validators/"
+      "Validators\\": "lib/Validators/",
+      "AssetManager\\": "lib/AssetManager/"
     }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.6.*"
   }
 }

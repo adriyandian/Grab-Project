@@ -80,19 +80,29 @@ class DoctrineSetup {
     /**
      *  Call me to set up the required params.
      */
-    public function setUp() {
+    public function setUp($test = false) {
       if (!file_exists('db_config.ini')) {
           throw new \Exception(
               'Missing db_config.ini. You can create this from the db_config_sample.ini'
           );
       }
 
-      $this->dbParams = array(
-          'driver' => 'pdo_mysql',
-          'user' => parse_ini_file('db_config.ini')['DB_USER'],
-          'password' => parse_ini_file('db_config.ini')['DB_PASSWORD'],
-          'dbname' => parse_ini_file('db_config.ini')['DB_NAME']
-      );
+      if ($test != false) {
+          $this->dbParams = array(
+              'driver' => 'pdo_mysql',
+              'user' => parse_ini_file('db_config.ini')['DB_TEST_USER'],
+              'password' => parse_ini_file('db_config.ini')['DB_TEST_PASSWORD'],
+              'dbname' => parse_ini_file('db_config.ini')['DB_TEST_NAME']
+          );
+      } else {
+          $this->dbParams = array(
+              'driver' => 'pdo_mysql',
+              'user' => parse_ini_file('db_config.ini')['DB_USER'],
+              'password' => parse_ini_file('db_config.ini')['DB_PASSWORD'],
+              'dbname' => parse_ini_file('db_config.ini')['DB_NAME']
+          );
+      }
+
     }
 
     /**
@@ -124,20 +134,20 @@ class EntityManagerContainer
     /**
      * Basic constructor - This class cannot be instantiated
      */
-    private function __construct()
+    private function __construct($test = false)
     {
         $ds = DoctrineSetup::getInstance();
-        $ds->setUp();
+        $ds->setUp($test);
         $this->em = $ds->getEntityManager();
     }
 
     /**
      * Get an instance of this class.
      */
-    public static function getInstance()
+    public static function getInstance($test = false)
     {
         if (null === self::$instance) {
-            self::$instance= new self();
+            self::$instance= new self($test);
         }
 
         return self::$instance;
@@ -159,8 +169,8 @@ class EntityManagerContainer
  *
  * @return EntityManager
  */
-function getEntityManager() {
-  return EntityManagerContainer::getInstance()->getEntityManager();
+function getEntityManager($test = false) {
+  return EntityManagerContainer::getInstance($test)->getEntityManager();
 }
 
 /**
